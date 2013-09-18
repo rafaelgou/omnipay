@@ -20,16 +20,21 @@ class AuthorizeRequest extends AbstractRequest
 
     public function getData()
     {
+        return parent::getData();
+
+
         $data = array();
 
-        var_dump($this->getTransactionId());
+        //var_dump($this->getTransactionId());
 
         $data['email'] = $this->getEmail();
         $data['token'] = $this->getToken();
         $data['currency'] = $this->getCurrency();
         $data['itemId1'] = $this->getTransactionId();
-        $data['itemAmount1'] = $this->getAmountInteger();
+        $data['itemAmount1'] = (string) $this->getAmountInteger();
         $data['itemDescription1'] = $this->getDescription();
+        $data['itemQuantity1'] = 1;
+
 
         return $data;
     }

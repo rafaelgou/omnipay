@@ -1,14 +1,19 @@
 <?php
+namespace Omnipay\PagSeguro\Http;
 
-namespace Omnipay\PagSeguro\Message;
-
-use Guzzle\Http\Client;
+use Omnipay\PagSeguro\Error\ConnectionException;
+use Omnipay\PagSeguro\Error\PagSeguroException;
+use Omnipay\PagSeguro\Error\HttpException;
+use Guzzle\Http\Client as HttpClient;
 use Guzzle\Common\Event;
 
-class HttpClient
+/**
+ * @author Luís Otávio Cobucci Oblonczyk <lcobucci@gmail.com>
+ */
+class Client
 {
     /**
-     * @var Client
+     * @var HttpClient
      */
     private $client;
 
@@ -21,7 +26,7 @@ class HttpClient
         $verifySSL = false,
         $charset = 'UTF-8'
     ) {
-        $this->client = new Client(
+        $this->client = new HttpClient(
             '',
             array(
                 'curl.options' => array(
@@ -40,15 +45,13 @@ class HttpClient
                 $response = $event['response'];
 
                 if ($response->getStatusCode() == 400) {
-                    //throw PagSeguroException::createFromXml($response->xml());
+                    throw PagSeguroException::createFromXml($response->xml());
                 }
 
-                /*
                 throw new HttpException(
                     '[' . $response->getStatusCode() . '] A HTTP error has occurred: '
                     . $response->getBody(true)
                 );
-                */
             }
         );
     }

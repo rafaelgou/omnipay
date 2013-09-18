@@ -16,7 +16,7 @@ class PaymentRequest
     private $currency;
 
     /**
-     * @var multitype:\PHPSC\PagSeguro\ValueObject\Item
+     * @var multitype:Omnipay\PagSeguro\ValueObject\Item
      */
     private $items;
 
@@ -26,7 +26,7 @@ class PaymentRequest
     private $reference;
 
     /**
-     * @var \PHPSC\PagSeguro\ValueObject\Sender
+     * @var Omnipay\PagSeguro\ValueObject\Sender
      */
     private $sender;
 
@@ -56,10 +56,10 @@ class PaymentRequest
     private $maxAge;
 
     /**
-     * @param multitype:\PHPSC\PagSeguro\ValueObject\Item $items
+     * @param multitype:Omnipay\PagSeguro\ValueObject\Item $items
      * @param string $reference
-     * @param \PHPSC\PagSeguro\ValueObject\Sender $sender
-     * @param \PHPSC\PagSeguro\ValueObject\Shipping $shipping
+     * @param Omnipay\PagSeguro\ValueObject\Sender $sender
+     * @param Omnipay\PagSeguro\ValueObject\Shipping $shipping
      * @param float $extraAmount
      * @param string $redirectUrl
      * @param int $maxUses
@@ -150,7 +150,7 @@ class PaymentRequest
     }
 
     /**
-     * @return \PHPSC\PagSeguro\ValueObject\Sender
+     * @return Omnipay\PagSeguro\ValueObject\Sender
      */
     public function getSender()
     {
@@ -158,7 +158,7 @@ class PaymentRequest
     }
 
     /**
-     * @param \PHPSC\PagSeguro\ValueObject\Sender $sender
+     * @param Omnipay\PagSeguro\ValueObject\Sender $sender
      */
     protected function setSender(Sender $sender = null)
     {
@@ -166,7 +166,7 @@ class PaymentRequest
     }
 
     /**
-     * @return \PHPSC\PagSeguro\ValueObject\Shipping
+     * @return Omnipay\PagSeguro\ValueObject\Shipping
      */
     public function getShipping()
     {
@@ -174,7 +174,7 @@ class PaymentRequest
     }
 
     /**
-     * @param \PHPSC\PagSeguro\ValueObject\Shipping $shipping
+     * @param Omnipay\PagSeguro\ValueObject\Shipping $shipping
      */
     protected function setShipping(Shipping $shipping = null)
     {

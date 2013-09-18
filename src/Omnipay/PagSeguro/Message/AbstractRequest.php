@@ -15,6 +15,11 @@ use Omnipay\Common\Message\AbstractRequest as BaseRequest;
 use Guzzle\Http\Client;
 use Guzzle\Common\Event;
 
+use Omnipay\PagSeguro\ValueObject\Payment\PaymentRequest;
+use Omnipay\PagSeguro\ValueObject\Credentials;
+use Omnipay\PagSeguro\ValueObject\Item;
+use Omnipay\PagSeguro\PaymentService;
+
 /**
  * PagSeguro Abstract Request
  */
@@ -68,48 +73,50 @@ abstract class AbstractRequest extends BaseRequest
     public function getData()
     {
         $data = array();
-        $data['email'] = $this->getEmail();
-        $data['token'] = $this->getToken();
-        $data['currency'] = $this->getCurrency();
-        $data['charset']  = $this->getCharset();
+
+        $data['credentials'] = new Credentials(
+            $this->getEmail(),
+            $this->getToken()
+        );
+
+        $data['paymentRequest'] = new PaymentRequest(
+            array( // Coleção de itens a serem pagos (O limite de itens é definido pelo webservice da Pagseguro)
+                new Item(
+                    '1', // ID do item
+                    'Televisão LED 500 polegadas', // Descrição do item
+                    8999.99 // Valor do item
+                ),
+                new Item(
+                    '2', // ID do item
+                    'Video-game mega ultra blaster', // Descrição do item
+                    799.99 // Valor do item
+                )
+            )
+        );
 
         return $data;
     }
 
     public function send()
     {
-        // $request = new HttpClient();
-        // $request->post($this->getEndpoint(), $this->getData());
+        $data = $this->getData();
 
-        $options = array(
-            'curl.options' => array(
-                CURLOPT_CONNECTTIMEOUT => 10,
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1'
-                )
-            )
-        );
+        $service = new PaymentService($data['credentials']); // cria instância do serviço de pagamentos
 
-        var_dump($this->getData());
-        die;
+        try {
+            $httpResponse = $service->send($data['paymentRequest']);
 
-        $request = $this->httpClient->createRequest(
-            'POST',
-            $this->endpoint,
-            null,
-            http_build_query($this->getData(), '', '&'),
-            $options
-        );
+            echo $httpResponse->getRedirectionUrl(); exit;
 
-        var_dump($request);
-        die;
+            header('Locaton: ' . $httpResponse->getRedirectionUrl()); // Redireciona o usuário
+            exit;
+        } catch (Exception $error) { // Caso ocorreu algum erro
+            echo $error->getMessage(); // Exibe na tela a mensagem de erro
+        }
 
-        $request->send();
-        var_dump($request);
-        // $request->send();
+        // Isto não deve funcionar
+        //return $this->response = new Response($this, $httpResponse->getBody());
 
-        // return $this->response = new Response($this, $response->getBody());
     }
 
 }
