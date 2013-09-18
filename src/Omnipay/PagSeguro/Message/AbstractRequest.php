@@ -105,17 +105,11 @@ abstract class AbstractRequest extends BaseRequest
 
         try {
             $httpResponse = $service->send($data['paymentRequest']);
-
-            echo $httpResponse->getRedirectionUrl(); exit;
-
-            header('Locaton: ' . $httpResponse->getRedirectionUrl()); // Redireciona o usuário
-            exit;
         } catch (Exception $error) { // Caso ocorreu algum erro
             echo $error->getMessage(); // Exibe na tela a mensagem de erro
         }
 
-        // Isto não deve funcionar
-        //return $this->response = new Response($this, $httpResponse->getBody());
+        return $this->response = new Response($this, $httpResponse);
 
     }
 
